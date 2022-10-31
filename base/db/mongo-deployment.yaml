@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    io.kompose.service: ztgg-mongo-prod
+  name: ztgg-mongo-prod-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: ztgg-mongo-prod
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        io.kompose.service: ztgg-mongo-prod
+    spec:
+      containers:
+        - name: mongo
+          image: mongo
+          ports:
+            - containerPort: 27017
+              protocol: TCP
+          volumeMounts:
+            - mountPath: /data/db
+              name: mongodb-prod-data
+          resources:
+            requests:
+              memory: "1Gi"
+              cpu: "250m"
+            limits:
+              memory: "2Gi"
+              cpu: "250m"
+      volumes:
+        - name: mongodb-prod-data
+          hostPath:
+            path: /Users/tianyang/Develop/ZhiTongGuiGu/data/mongo 
+            type: DirectoryOrCreate
+      nodeSelector:
+        pool: ztgg-components

@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    io.kompose.service: ztgg-ui
+  name: ztgg-ui-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: ztgg-ui
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        io.kompose.service: ztgg-ui
+    spec:
+      containers:
+        - name: ztgg-ui
+          image: ztgg_uidemo 
+          imagePullPolicy: Never 
+          env:
+            - name: BACKEND_DOMAIN 
+              value: 10.0.0.114
+          ports:
+            - containerPort: 3000
+              protocol: TCP
+      nodeSelector:
+        pool: ztgg-components

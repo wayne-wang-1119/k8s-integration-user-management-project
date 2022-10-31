@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    io.kompose.service: ztgg-backend-prod
+  name: ztgg-backend-prod-deployment
+spec:
+  replicas: 4
+  selector:
+    matchLabels:
+      io.kompose.service: ztgg-backend-prod
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        io.kompose.service: ztgg-backend-prod
+    spec:
+      containers:
+        - name: ztgg-backend-prod
+          image: ztgg_flaskdemo
+          imagePullPolicy: Never
+          env:
+            - name: RUN_ENV
+              value: development
+            - name: ZTGG_DOMAIN
+              value: 10.0.0.114 
+          ports:
+            - containerPort: 5000
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /ztgg-backend-api/v1/users
+              port: 5000
+            initialDelaySeconds: 300
+            periodSeconds: 60
+          resources:
+            requests:
+              memory: "100Mi"
+              cpu: "250m"
+            limits:
+              memory: "100Mi"
+              cpu: "250m"
+      nodeSelector:
+        pool: ztgg-components

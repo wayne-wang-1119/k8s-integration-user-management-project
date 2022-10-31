@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    io.kompose.service: ztgg-mongo-prod
+  name: ztgg-mongo-prod-service
+spec:
+  type: NodePort
+  ports:
+    - name: mongo-prod-inst-port
+      port: 27017
+      targetPort: 27017
+      nodePort: 30001
+  selector:
+    io.kompose.service: ztgg-mongo-prod
